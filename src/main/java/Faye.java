@@ -23,14 +23,16 @@ public class Faye {
                 System.out.println(" Im outta here. Peace!");
                 System.out.println("____________________________________________");
                 break;
+
             } else if (input.equals("list")) {
                 System.out.println("____________________________________________");
 
                 for (int i = 0; i < tasks.size(); i++){
                     System.out.println((1 + i) + "." + tasks.get(i));
                 }
-
+                
                 System.out.println("____________________________________________");
+            
             } else if (input.startsWith("mark")) {
                 int index = Integer.parseInt(input.split(" ")[1]) - 1;
                 tasks.get(index).mark();
@@ -49,6 +51,23 @@ public class Faye {
                 System.out.println(" OK, I've marked this task as not done yet:");
                 System.out.println("   " + tasks.get(index));
                 System.out.println("____________________________________________");
+            
+            } else if (input.startsWith("todo")) {
+                String todoTask  = input.substring(5);
+                tasks.add(new Todo(todoTask));
+                System.out.println("Now you have " + tasks.size() + " tasks.");
+
+            } else if (input.startsWith("deadline")) {
+                String[] temp = input.substring(9).split("/by");
+                tasks.add(new Deadline(temp[0].trim(), temp[1].trim()));
+                System.out.println("Now you have " + tasks.size() + " tasks.");
+            }
+
+            else if (input.startsWith("event")) {
+                String[] temp = input.substring(6).split("/from|/to");
+                tasks.add(new Event(temp[0].trim(),temp[1].trim(),temp[2].trim()));
+                System.out.println("Now you have " + tasks.size() + " tasks.");
+            
             } else {
                 Task task =  new Task(input);
                 tasks.add(task);
