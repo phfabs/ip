@@ -5,19 +5,18 @@ public class Faye {
     public static void main(String[] args) {
         System.out.println("____________________________________________");
         System.out.println(" Yo Wassup my G! Yo friend Faye right here");
-        System.out.println(" What can I do for you my dawg?");
         System.out.println("____________________________________________");
-        System.out.println(" As a skilled person, i can decument yo inputs");
-        System.out.println(" Now enter yo mf inputs if u wna test me out: ");
+        System.out.println(" ");
+        System.out.println(" Add your tasks: ");
+        
 
-
-        Scanner scanner = new Scanner(System.in);
+        Scanner scnr = new Scanner(System.in);
 
         //Stores user inputs
-        ArrayList<String> inputList = new ArrayList<>();
+        ArrayList<Task> tasks = new ArrayList<>();
 
         while(true){
-            String input = scanner.nextLine();
+            String input = scnr.nextLine();
 
             if(input.equals("bye")) {
                 System.out.println("____________________________________________");
@@ -27,15 +26,35 @@ public class Faye {
             } else if (input.equals("list")) {
                 System.out.println("____________________________________________");
 
-                for (int i = 0; i < inputList.size(); i++){
-                    System.out.println((1 + i) + "." + inputList.get(i));
+                for (int i = 0; i < tasks.size(); i++){
+                    System.out.println((1 + i) + "." + tasks.get(i));
                 }
 
                 System.out.println("____________________________________________");
+            } else if (input.startsWith("mark")) {
+                int index = Integer.parseInt(input.split(" ")[1]) - 1;
+                tasks.get(index).mark();
+
+                System.out.println("____________________________________________");
+                System.out.println(" Marked!");
+                System.out.println("   " + tasks.get(index));
+                System.out.println("____________________________________________");
+            }
+
+            else if (input.startsWith("unmark")) {
+                int index = Integer.parseInt(input.split(" ")[1]) - 1;
+                tasks.get(index).unmark();
+
+                System.out.println("____________________________________________");
+                System.out.println(" OK, I've marked this task as not done yet:");
+                System.out.println("   " + tasks.get(index));
+                System.out.println("____________________________________________");
             } else {
-                inputList.add(input);
+                Task task =  new Task(input);
+                tasks.add(task);
                 System.out.println("____________________________________________");
                 System.out.println(" added: " + input);
+                System.out.println("Do it now or ill whoop yo ass");
                 System.out.println("____________________________________________");
 
             }
