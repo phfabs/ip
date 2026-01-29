@@ -34,24 +34,39 @@ public class Faye {
                 System.out.println("____________________________________________");
             
             } else if (input.startsWith("mark")) {
-                int index = Integer.parseInt(input.split(" ")[1]) - 1;
-                tasks.get(index).mark();
+                try {
+                    int index = Integer.parseInt(input.split(" ")[1]) - 1;
+                    if (index < 0 || index >= tasks.size()) {
+                        throw new InvalidTaskNumberException("Invalid task number! Pick a number from your list.");
+                    }
+                    tasks.get(index).mark();
+                    System.out.println("____________________________________________");
+                    System.out.println(" Marked!");
+                    System.out.println("   " + tasks.get(index));
+                    System.out.println("____________________________________________");
+                } catch (InvalidTaskNumberException e) {
+                    System.out.println("____________________________________________");
+                    System.out.println(" " + e.getMessage());
+                    System.out.println("____________________________________________");
+                }
 
-                System.out.println("____________________________________________");
-                System.out.println(" Marked!");
-                System.out.println("   " + tasks.get(index));
-                System.out.println("____________________________________________");
             }
-
             else if (input.startsWith("unmark")) {
-                int index = Integer.parseInt(input.split(" ")[1]) - 1;
-                tasks.get(index).unmark();
-
-                System.out.println("____________________________________________");
-                System.out.println(" OK, I've marked this task as not done yet:");
-                System.out.println("   " + tasks.get(index));
-                System.out.println("____________________________________________");
-            
+                try {
+                    int index = Integer.parseInt(input.split(" ")[1]) - 1;
+                    if (index < 0 || index >= tasks.size()) {
+                        throw new InvalidTaskNumberException("Invalid task number! Pick a number from your list.");
+                    }
+                    tasks.get(index).unmark();
+                    System.out.println("____________________________________________");
+                    System.out.println(" OK, I've marked this task as not done yet:");
+                    System.out.println("   " + tasks.get(index));
+                    System.out.println("____________________________________________");
+                } catch (InvalidTaskNumberException e) {
+                    System.out.println("____________________________________________");
+                    System.out.println(" " + e.getMessage());
+                    System.out.println("____________________________________________");
+                }
             } else if (input.startsWith("todo")) {
                 try {
                     String todoTask = input.substring(4).trim();
