@@ -12,7 +12,6 @@ public class Faye {
 
         Scanner scnr = new Scanner(System.in);
 
-        //Stores user inputs
         ArrayList<Task> tasks = new ArrayList<>();
 
         while(true){
@@ -37,7 +36,7 @@ public class Faye {
                 try {
                     int index = Integer.parseInt(input.split(" ")[1]) - 1;
                     if (index < 0 || index >= tasks.size()) {
-                        throw new InvalidTaskNumberException("Invalid task number! Pick a number from your list.");
+                        throw new InvalidTaskNumberException("This number is invalid like your personality");
                     }
                     tasks.get(index).mark();
                     System.out.println("____________________________________________");
@@ -55,7 +54,7 @@ public class Faye {
                 try {
                     int index = Integer.parseInt(input.split(" ")[1]) - 1;
                     if (index < 0 || index >= tasks.size()) {
-                        throw new InvalidTaskNumberException("Invalid task number! Pick a number from your list.");
+                        throw new InvalidTaskNumberException("This number is invalid like your personality");
                     }
                     tasks.get(index).unmark();
                     System.out.println("____________________________________________");
@@ -67,7 +66,28 @@ public class Faye {
                     System.out.println(" " + e.getMessage());
                     System.out.println("____________________________________________");
                 }
-            } else if (input.startsWith("todo")) {
+            } else if (input.startsWith("delete")) {
+                try {
+                    int index = Integer.parseInt(input.split(" ")[1]) - 1; 
+
+                    if (index < 0 || index >= tasks.size()) {
+                        throw new InvalidTaskNumberException("This number is invalid like your personality");
+                    }
+
+                    Task removedTask = tasks.remove(index); 
+
+                    System.out.println("____________________________________________");
+                    System.out.println(" Aight. Removed. ");
+                    System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
+                    System.out.println("____________________________________________");
+
+                } catch (InvalidTaskNumberException e) {
+                    System.out.println("____________________________________________");
+                    System.out.println(" " + e.getMessage());
+                    System.out.println("____________________________________________");
+                }
+            }
+            else if (input.startsWith("todo")) {
                 try {
                     String todoTask = input.substring(4).trim();
                     if (todoTask.isEmpty()) {
