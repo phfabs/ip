@@ -53,20 +53,69 @@ public class Faye {
                 System.out.println("____________________________________________");
             
             } else if (input.startsWith("todo")) {
-                String todoTask  = input.substring(5);
-                tasks.add(new Todo(todoTask));
-                System.out.println("Now you have " + tasks.size() + " tasks.");
+                try {
+                    String todoTask = input.substring(4).trim();
+                    if (todoTask.isEmpty()) {
+                        throw new EmptyTaskInputException("Dude, Todo Task cant be empty. U gotta do something");
+                    }
+                    tasks.add(new Todo(todoTask));
+                    System.out.println("Now you have " + tasks.size() + " tasks.");
+                } catch (EmptyTaskInputException e) {
+                    System.out.println("____________________________________________");
+                    System.out.println(" " + e.getMessage());
+                    System.out.println("____________________________________________");
+                }
 
             } else if (input.startsWith("deadline")) {
-                String[] temp = input.substring(9).split("/by");
-                tasks.add(new Deadline(temp[0].trim(), temp[1].trim()));
-                System.out.println("Now you have " + tasks.size() + " tasks.");
+                try {
+                    String task = input.substring(8).trim();
+
+                    if (task.isEmpty()) {
+                        throw new EmptyTaskInputException("Dude, ddl cant be empty.");
+                    }
+
+                    String[] temp = task.split("/by");
+
+                    if (temp.length < 2 || temp[0].trim().isEmpty() || temp[1].trim().isEmpty()) {
+                        throw new EmptyTaskInputException("Deadline must have formot in: [task] /by time.");
+                    }
+                
+                    tasks.add(new Deadline(temp[0].trim(), temp[1].trim()));
+                    System.out.println("Now you have " + tasks.size() + " tasks.");
+
+                } catch (EmptyTaskInputException e) {
+                    System.out.println("____________________________________________");
+                    System.out.println(" " + e.getMessage());
+                    System.out.println("____________________________________________");
+                }
+                
             }
 
             else if (input.startsWith("event")) {
-                String[] temp = input.substring(6).split("/from|/to");
-                tasks.add(new Event(temp[0].trim(),temp[1].trim(),temp[2].trim()));
-                System.out.println("Now you have " + tasks.size() + " tasks.");
+                try {
+                    String task = input.substring(5).trim();
+
+                    if (task.isEmpty()) {
+                        throw new EmptyTaskInputException("Dude, event cant be empty.");
+                    }
+
+                    String[] temp = task.split("/from|/to");
+
+                    if (temp.length < 3 || 
+                        temp[0].trim().isEmpty() || 
+                        temp[1].trim().isEmpty() ||
+                        temp[2].trim().isEmpty()) {
+                        throw new EmptyTaskInputException("Deadline must have format in: [ddl] /from [time] /to [time]");
+                    }
+                
+                    tasks.add(new Event(temp[0].trim(),temp[1].trim(),temp[2].trim()));
+                    System.out.println("Now you have " + tasks.size() + " tasks.");
+
+                } catch (EmptyTaskInputException e) {
+                    System.out.println("____________________________________________");
+                    System.out.println(" " + e.getMessage());
+                    System.out.println("____________________________________________");
+                }
             
             } else {
                 Task task =  new Task(input);
