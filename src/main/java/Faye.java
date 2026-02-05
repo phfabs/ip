@@ -1,6 +1,10 @@
 import  java.util.Scanner;
+<<<<<<< HEAD
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+=======
+import java.time.LocalDate;
+>>>>>>> branch-Level-8
 import java.util.ArrayList;
 
 public class Faye {
@@ -118,7 +122,7 @@ public class Faye {
                     String[] temp = task.split("/by");
 
                     if (temp.length < 2 || temp[0].trim().isEmpty() || temp[1].trim().isEmpty()) {
-                        throw new EmptyTaskInputException("Deadline must have formot in: [task] /by time.");
+                        throw new EmptyTaskInputException("Deadline must have format in: [task] /by yyyy-mm-dd");
                     }
                     
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
@@ -149,7 +153,7 @@ public class Faye {
                         temp[0].trim().isEmpty() || 
                         temp[1].trim().isEmpty() ||
                         temp[2].trim().isEmpty()) {
-                        throw new EmptyTaskInputException("Deadline must have format in: [ddl] /from [time] /to [time]");
+                        throw new EmptyTaskInputException("Event must have format in: [ddl] /from [time] /to [time]");
                     }
                 
                     tasks.add(new Event(temp[0].trim(),temp[1].trim(),temp[2].trim()));
