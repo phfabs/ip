@@ -12,7 +12,8 @@ public class Faye {
 
         Scanner scnr = new Scanner(System.in);
 
-        ArrayList<Task> tasks = new ArrayList<>();
+        Storage storage = new Storage("./data/faye.txt");
+        ArrayList<Task> tasks = storage.load();
 
         while(true){
             String input = scnr.nextLine();
@@ -39,6 +40,7 @@ public class Faye {
                         throw new InvalidTaskNumberException("This number is invalid like your personality");
                     }
                     tasks.get(index).mark();
+                    storage.save(tasks);
                     System.out.println("____________________________________________");
                     System.out.println(" Marked!");
                     System.out.println("   " + tasks.get(index));
@@ -57,6 +59,7 @@ public class Faye {
                         throw new InvalidTaskNumberException("This number is invalid like your personality");
                     }
                     tasks.get(index).unmark();
+                    storage.save(tasks);
                     System.out.println("____________________________________________");
                     System.out.println(" OK, I've marked this task as not done yet:");
                     System.out.println("   " + tasks.get(index));
@@ -75,7 +78,7 @@ public class Faye {
                     }
 
                     Task removedTask = tasks.remove(index); 
-
+                    storage.save(tasks);
                     System.out.println("____________________________________________");
                     System.out.println(" Aight. Removed. ");
                     System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
@@ -94,6 +97,7 @@ public class Faye {
                         throw new EmptyTaskInputException("Dude, Todo Task cant be empty. U gotta do something");
                     }
                     tasks.add(new Todo(todoTask));
+                    storage.save(tasks);
                     System.out.println("Now you have " + tasks.size() + " tasks.");
                 } catch (EmptyTaskInputException e) {
                     System.out.println("____________________________________________");
@@ -116,6 +120,7 @@ public class Faye {
                     }
                 
                     tasks.add(new Deadline(temp[0].trim(), temp[1].trim()));
+                    storage.save(tasks);
                     System.out.println("Now you have " + tasks.size() + " tasks.");
 
                 } catch (EmptyTaskInputException e) {
@@ -144,6 +149,7 @@ public class Faye {
                     }
                 
                     tasks.add(new Event(temp[0].trim(),temp[1].trim(),temp[2].trim()));
+                    storage.save(tasks);
                     System.out.println("Now you have " + tasks.size() + " tasks.");
 
                 } catch (EmptyTaskInputException e) {
