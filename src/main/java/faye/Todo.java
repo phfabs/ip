@@ -1,3 +1,4 @@
+package faye;
 public class Todo extends Task {
     public Todo(String todoTask) {
         super(todoTask);
