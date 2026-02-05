@@ -1,184 +1,104 @@
-import  java.util.Scanner;
-<<<<<<< HEAD
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-=======
-import java.time.LocalDate;
->>>>>>> branch-Level-8
-import java.util.ArrayList;
 
 public class Faye {
-    public static void main(String[] args) {
-        System.out.println("____________________________________________");
-        System.out.println(" Yo Wassup my G! Yo friend Faye right here");
-        System.out.println("____________________________________________");
-        System.out.println(" ");
-        System.out.println(" Add your tasks: ");
-        
+    private Ui ui;
+    private Storage storage;
+    private TaskList tasks;
 
-        Scanner scnr = new Scanner(System.in);
+    public Faye() {
+        ui = new Ui();
+        storage = new Storage("./data/faye.txt");
+        tasks = new TaskList(storage.load());
+    }
 
-        Storage storage = new Storage("./data/faye.txt");
-        ArrayList<Task> tasks = storage.load();
+    public void run() {
+        ui.showWelcome();
 
-        while(true){
-            String input = scnr.nextLine();
+        while (true) {
+            String input = ui.readCommand();
+            String command = Parser.getCommand(input);
 
-            if(input.equals("bye")) {
-                System.out.println("____________________________________________");
-                System.out.println(" Im outta here. Peace!");
-                System.out.println("____________________________________________");
-                break;
+            try {
+                switch (command) {
+                    case "bye":
+                        ui.showBye();
+                        return;
 
-            } else if (input.equals("list")) {
-                System.out.println("____________________________________________");
+                    case "list":
+                        ui.showLine();
+                        ui.showTasks(tasks.getTasks());
+                        ui.showLine();
+                        break;
 
-                for (int i = 0; i < tasks.size(); i++){
-                    System.out.println((1 + i) + "." + tasks.get(i));
-                }
-                
-                System.out.println("____________________________________________");
-            
-            } else if (input.startsWith("mark")) {
-                try {
-                    int index = Integer.parseInt(input.split(" ")[1]) - 1;
-                    if (index < 0 || index >= tasks.size()) {
-                        throw new InvalidTaskNumberException("This number is invalid like your personality");
-                    }
-                    tasks.get(index).mark();
-                    storage.save(tasks);
-                    System.out.println("____________________________________________");
-                    System.out.println(" Marked!");
-                    System.out.println("   " + tasks.get(index));
-                    System.out.println("____________________________________________");
-                } catch (InvalidTaskNumberException e) {
-                    System.out.println("____________________________________________");
-                    System.out.println(" " + e.getMessage());
-                    System.out.println("____________________________________________");
-                }
-
-            }
-            else if (input.startsWith("unmark")) {
-                try {
-                    int index = Integer.parseInt(input.split(" ")[1]) - 1;
-                    if (index < 0 || index >= tasks.size()) {
-                        throw new InvalidTaskNumberException("This number is invalid like your personality");
-                    }
-                    tasks.get(index).unmark();
-                    storage.save(tasks);
-                    System.out.println("____________________________________________");
-                    System.out.println(" OK, I've marked this task as not done yet:");
-                    System.out.println("   " + tasks.get(index));
-                    System.out.println("____________________________________________");
-                } catch (InvalidTaskNumberException e) {
-                    System.out.println("____________________________________________");
-                    System.out.println(" " + e.getMessage());
-                    System.out.println("____________________________________________");
-                }
-            } else if (input.startsWith("delete")) {
-                try {
-                    int index = Integer.parseInt(input.split(" ")[1]) - 1; 
-
-                    if (index < 0 || index >= tasks.size()) {
-                        throw new InvalidTaskNumberException("This number is invalid like your personality");
+                    case "mark": {
+                        int index = Parser.getIndex(input);
+                        tasks.mark(index);
+                        storage.save(tasks.getTasks());
+                        ui.showMark(tasks.get(index));
+                        break;
                     }
 
-                    Task removedTask = tasks.remove(index); 
-                    storage.save(tasks);
-                    System.out.println("____________________________________________");
-                    System.out.println(" Aight. Removed. ");
-                    System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
-                    System.out.println("____________________________________________");
-
-                } catch (InvalidTaskNumberException e) {
-                    System.out.println("____________________________________________");
-                    System.out.println(" " + e.getMessage());
-                    System.out.println("____________________________________________");
-                }
-            }
-            else if (input.startsWith("todo")) {
-                try {
-                    String todoTask = input.substring(4).trim();
-                    if (todoTask.isEmpty()) {
-                        throw new EmptyTaskInputException("Dude, Todo Task cant be empty. U gotta do something");
-                    }
-                    tasks.add(new Todo(todoTask));
-                    storage.save(tasks);
-                    System.out.println("Now you have " + tasks.size() + " tasks.");
-                } catch (EmptyTaskInputException e) {
-                    System.out.println("____________________________________________");
-                    System.out.println(" " + e.getMessage());
-                    System.out.println("____________________________________________");
-                }
-
-            } else if (input.startsWith("deadline")) {
-                try {
-                    String task = input.substring(8).trim();
-
-                    if (task.isEmpty()) {
-                        throw new EmptyTaskInputException("Dude, ddl cant be empty.");
+                    case "unmark": {
+                        int index = Parser.getIndex(input);
+                        tasks.unmark(index);
+                        storage.save(tasks.getTasks());
+                        ui.showUnmark(tasks.get(index));
+                        break;
                     }
 
-                    String[] temp = task.split("/by");
-
-                    if (temp.length < 2 || temp[0].trim().isEmpty() || temp[1].trim().isEmpty()) {
-                        throw new EmptyTaskInputException("Deadline must have format in: [task] /by yyyy-mm-dd");
+                    case "delete": {
+                        int index = Parser.getIndex(input);
+                        Task removed = tasks.remove(index);
+                        storage.save(tasks.getTasks());
+                        ui.showDelete(removed, tasks.size());
+                        break;
                     }
-                    
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
-                    LocalDateTime dateTime = LocalDateTime.parse(temp[1].trim(), formatter);
-                    tasks.add(new Deadline(temp[0].trim(), dateTime));
-                    storage.save(tasks);
-                    System.out.println("Now you have " + tasks.size() + " tasks.");
 
-                } catch (EmptyTaskInputException e) {
-                    System.out.println("____________________________________________");
-                    System.out.println(" " + e.getMessage());
-                    System.out.println("____________________________________________");
+                    case "todo": {
+                        String desc = Parser.getDescription(input);
+                        if (desc.isEmpty()) throw new EmptyTaskInputException("Todo cannot be empty.");
+                        Task t = new Todo(desc);
+                        tasks.add(t);
+                        storage.save(tasks.getTasks());
+                        ui.showAdd(t, tasks.size());
+                        break;
+                    }
+
+                    case "deadline": {
+                        String[] parts = Parser.splitDeadline(input);
+                        String desc = parts[0].trim();
+                        LocalDateTime by = LocalDateTime.parse(parts[1].trim(),
+                                DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"));
+                        Task t = new Deadline(desc, by);
+                        tasks.add(t);
+                        storage.save(tasks.getTasks());
+                        ui.showAdd(t, tasks.size());
+                        break;
+                    }
+
+                    case "event": {
+                        String[] parts = Parser.splitEvent(input);
+                        Task t = new Event(parts[0].trim(), parts[1].trim(), parts[2].trim());
+                        tasks.add(t);
+                        storage.save(tasks.getTasks());
+                        ui.showAdd(t, tasks.size());
+                        break;
+                    }
+
+                    default:
+                        ui.showError("Unknown command.");
+                        break;
                 }
-                
+            } catch (Exception e) {
+                ui.showError(e.getMessage());
             }
 
-            else if (input.startsWith("event")) {
-                try {
-                    String task = input.substring(5).trim();
-
-                    if (task.isEmpty()) {
-                        throw new EmptyTaskInputException("Dude, event cant be empty.");
-                    }
-
-                    String[] temp = task.split("/from|/to");
-
-                    if (temp.length < 3 || 
-                        temp[0].trim().isEmpty() || 
-                        temp[1].trim().isEmpty() ||
-                        temp[2].trim().isEmpty()) {
-                        throw new EmptyTaskInputException("Event must have format in: [ddl] /from [time] /to [time]");
-                    }
-                
-                    tasks.add(new Event(temp[0].trim(),temp[1].trim(),temp[2].trim()));
-                    storage.save(tasks);
-                    System.out.println("Now you have " + tasks.size() + " tasks.");
-
-                } catch (EmptyTaskInputException e) {
-                    System.out.println("____________________________________________");
-                    System.out.println(" " + e.getMessage());
-                    System.out.println("____________________________________________");
-                }
-            
-            } else {
-                Task task =  new Task(input);
-                tasks.add(task);
-                System.out.println("____________________________________________");
-                System.out.println(" added: " + input);
-                System.out.println("Do it now or ill whoop yo ass");
-                System.out.println("____________________________________________");
-
-            }
-
-           
+            ui.showLine();
         }
+    }
 
-
+    public static void main(String[] args) {
+        new Faye().run();
     }
 }
