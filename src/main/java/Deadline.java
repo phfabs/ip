@@ -1,23 +1,28 @@
-public class Deadline extends Task{
-    protected String by;
+import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
 
-    public Deadline(String deadlineTask, String by) {
+public class Deadline extends Task{
+    protected LocalDateTime by;
+
+    public Deadline(String deadlineTask, LocalDateTime by) {
         super(deadlineTask);
         this.by = by;
     }
 
-    public Deadline(String task, boolean isDone, String by) {
+    public Deadline(String task, boolean isDone, LocalDateTime by) {
         super(task, isDone);
         this.by = by;
     }
 
     @Override
     public String toString() {
-        return "[D]" + super.toString() + " (by: " + by + ")";
+        String formatted = by.format(DateTimeFormatter.ofPattern("MMM dd yyyy HH:mm"));
+        return "[D]" + super.toString() + " (by: " + formatted + ")";
     }
 
     @Override
     public String toStorageString() {
-        return "D | " + (isDone ? "1" : "0") + " | " + task + " | " + by;
+        return "D | " + (isDone() ? "1" : "0") + " | " + getTask() + " | " + by;
     }
+    
 }

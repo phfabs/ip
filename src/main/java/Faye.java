@@ -1,4 +1,6 @@
 import  java.util.Scanner;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class Faye {
@@ -118,8 +120,10 @@ public class Faye {
                     if (temp.length < 2 || temp[0].trim().isEmpty() || temp[1].trim().isEmpty()) {
                         throw new EmptyTaskInputException("Deadline must have formot in: [task] /by time.");
                     }
-                
-                    tasks.add(new Deadline(temp[0].trim(), temp[1].trim()));
+                    
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
+                    LocalDateTime dateTime = LocalDateTime.parse(temp[1].trim(), formatter);
+                    tasks.add(new Deadline(temp[0].trim(), dateTime));
                     storage.save(tasks);
                     System.out.println("Now you have " + tasks.size() + " tasks.");
 

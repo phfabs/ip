@@ -1,11 +1,14 @@
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Storage {
     private String filePath;
+     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
 
     public Storage(String filePath) {
         this.filePath = filePath;
@@ -34,7 +37,8 @@ public class Storage {
                         tasks.add(new Todo(description, isDone));
                         break;
                     case "D":
-                        tasks.add(new Deadline(description, isDone, parts[3]));
+                        LocalDateTime by = LocalDateTime.parse(parts[3], formatter);
+                        tasks.add(new Deadline(description, isDone, by));
                         break;
                     case "E":
                         tasks.add(new Event(description, isDone, parts[3], parts[4]));
