@@ -1,11 +1,17 @@
 public class Task {
-    private String task;
-    private boolean isDone;
+    protected String task;
+    protected boolean isDone;
 
     public Task (String task) {
         this.task = task;
         this.isDone = false;
     }
+
+    public Task(String task, boolean isDone) { // constructor 2 for loading file
+        this.task = task;
+        this.isDone = isDone;
+    } 
+
 
     public String getTask() {
         return this.task;
@@ -30,6 +36,10 @@ public class Task {
         } else {
             return "[ ] " + task;
         }
+    }
+
+    public String toStorageString() {
+        return "T | " + (isDone ? "1" : "0") + " | " + task;
     }
 
 }
