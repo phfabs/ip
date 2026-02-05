@@ -1,4 +1,5 @@
 import  java.util.Scanner;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class Faye {
@@ -116,10 +117,11 @@ public class Faye {
                     String[] temp = task.split("/by");
 
                     if (temp.length < 2 || temp[0].trim().isEmpty() || temp[1].trim().isEmpty()) {
-                        throw new EmptyTaskInputException("Deadline must have formot in: [task] /by time.");
+                        throw new EmptyTaskInputException("Deadline must have format in: [task] /by yyyy-mm-dd");
                     }
                 
-                    tasks.add(new Deadline(temp[0].trim(), temp[1].trim()));
+                    LocalDate date = LocalDate.parse(temp[1].trim());
+                    tasks.add(new Deadline(temp[0].trim(), date));
                     storage.save(tasks);
                     System.out.println("Now you have " + tasks.size() + " tasks.");
 
@@ -145,7 +147,7 @@ public class Faye {
                         temp[0].trim().isEmpty() || 
                         temp[1].trim().isEmpty() ||
                         temp[2].trim().isEmpty()) {
-                        throw new EmptyTaskInputException("Deadline must have format in: [ddl] /from [time] /to [time]");
+                        throw new EmptyTaskInputException("Event must have format in: [ddl] /from [time] /to [time]");
                     }
                 
                     tasks.add(new Event(temp[0].trim(),temp[1].trim(),temp[2].trim()));

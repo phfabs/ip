@@ -1,12 +1,15 @@
-public class Deadline extends Task{
-    protected String by;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
-    public Deadline(String deadlineTask, String by) {
+public class Deadline extends Task{
+    protected LocalDate by;
+
+    public Deadline(String deadlineTask, LocalDate by) {
         super(deadlineTask);
         this.by = by;
     }
 
-    public Deadline(String task, boolean isDone, String by) {
+    public Deadline(String task, boolean isDone, LocalDate by) {
         super(task, isDone);
         this.by = by;
     }
