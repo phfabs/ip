@@ -11,15 +11,11 @@ public class Ui {
     }
 
     public void showWelcome() {
-        System.out.println("____________________________________________");
         System.out.println(" Yo Wassup my G! Yo friend Faye right here");
-        System.out.println("____________________________________________");
     }
 
     public void showBye() {
-        System.out.println("____________________________________________");
         System.out.println(" Im outta here. Peace!");
-        System.out.println("____________________________________________");
     }
 
     public String readCommand() {
@@ -27,7 +23,6 @@ public class Ui {
     }
 
     public void showLine() {
-        System.out.println("____________________________________________");
     }
 
     public void showTasks(ArrayList<Task> tasks) {
