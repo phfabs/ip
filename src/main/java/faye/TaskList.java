@@ -96,4 +96,17 @@ public class TaskList {
     public void unmark(int index) {
         tasks.get(index).unmark();
     }
+    
+
+    public ArrayList<Task> find(String keyword) {
+        ArrayList<Task> matches = new ArrayList<>();
+
+        for (Task task : tasks) {
+            if (task.getTask().contains(keyword)) {
+            matches.add(task);
+            }
+        }
+
+        return matches;
+    }
 }

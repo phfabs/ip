@@ -111,6 +111,13 @@ public class Faye {
                         break;
                     }
 
+                    case "find": {
+                        String keyword = Parser.getDescription(input);
+                        TaskList foundTasks = new TaskList(tasks.find(keyword));
+                        ui.showTasks(foundTasks.getTasks());
+                        break;
+                    }
+
                     default:
                         ui.showError("Unknown command.");
                         break;
