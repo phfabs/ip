@@ -1,13 +1,12 @@
 package faye;
 
-import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime;
-
+import java.time.format.DateTimeFormatter;
 
 /**
  * A task that must be completed by a specific date/time.
  */
-public class Deadline extends Task{
+public class Deadline extends Task {
     protected LocalDateTime by;
 
     /**
@@ -36,11 +35,17 @@ public class Deadline extends Task{
     /**
      * Returns a human-readable representation including the due date/time.
      *
+<<<<<<< HEAD
      * @return String form prefixed with {@code [D]} and including {@code (by: ...)}.
+=======
+     * @return String form prefixed with {@code [D]} and including
+     *         {@code (by: ...)}.
+>>>>>>> branch-A-CodingStandard
      */
     @Override
     public String toString() {
-        String formatted = by.format(DateTimeFormatter.ofPattern("MMM dd yyyy HH:mm"));
+        String formatted = by.format(DateTimeFormatter.ofPattern(
+                "MMM dd yyyy HH:mm"));
         return "[D]" + super.toString() + " (by: " + formatted + ")";
     }
 

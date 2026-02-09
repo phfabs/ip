@@ -14,7 +14,7 @@ public class Task {
      *
      * @param task Description of the task.
      */
-    public Task (String task) {
+    public Task(String task) {
         this.task = task;
         this.isDone = false;
     }
@@ -27,7 +27,7 @@ public class Task {
      * @param task Description of the task.
      * @param isDone Whether the task is completed.
      */
-    public Task(String task, boolean isDone) { // constructor 2 for loading file
+    public Task(String task, boolean isDone) {
         this.task = task;
         this.isDone = isDone;
     } 
@@ -50,7 +50,6 @@ public class Task {
     public boolean isDone() {
         return this.isDone;
     }
- 
     /**
      * Marks this task as done.
      */

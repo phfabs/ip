@@ -1,8 +1,9 @@
 package faye;
+
 /**
  * A task representing an event with a start and end time.
  */
-public class Event extends Task{
+public class Event extends Task {
     protected String from;
     protected String to;
 
@@ -32,15 +33,17 @@ public class Event extends Task{
         this.from = from;
         this.to = to;
     }
-    
+
     /**
      * Returns a human-readable representation including the event time range.
      *
-     * @return String form prefixed with {@code [E]} and including {@code (from: ... to: ...)}.
+     * @return String form prefixed with {@code [E]} and including
+     *         {@code (from: ... to: ...)}.
      */
     @Override
     public String toString() {
-        return "[E]" + super.toString() + " (from: " + from + " to: " + to + ")";
+        return "[E]" + super.toString() + " (from: " + from + " to: " + to
+                + ")";
     }
 
     /**

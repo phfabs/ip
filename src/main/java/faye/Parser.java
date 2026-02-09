@@ -1,9 +1,10 @@
 package faye;
+
 /**
  * Parses raw user input into structured command data.
  *
- * <p>This class contains small helpers for extracting the command word, index, and
- * task descriptions from a full input line.</p>
+ * <p>This class contains static utility methods for extracting the command word,
+ * index, and task descriptions from a full input line.</p>
  */
 public class Parser {
 
@@ -23,10 +24,15 @@ public class Parser {
      * @param input Full user input line.
      * @return 0-based index of the task referenced by the command.
      * @throws NumberFormatException if the index token is not a number.
+<<<<<<< HEAD
      * @throws ArrayIndexOutOfBoundsException if the input does not contain an index token.
+=======
+     * @throws ArrayIndexOutOfBoundsException if the input does not contain
+     *         an index token.
+>>>>>>> branch-A-CodingStandard
      */
     public static int getIndex(String input) {
-        return Integer.parseInt(input.split(" ")[1]) - 1; 
+        return Integer.parseInt(input.split(" ")[1]) - 1;
     }
 
     /**
