@@ -1,4 +1,5 @@
 package faye;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -6,16 +7,32 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * Handles persistent storage of tasks to and from a file.
+ *
+ * <p>This class manages reading tasks from a data file and writing tasks
+ * back to the file in a specific format.</p>
+ */
 public class Storage {
     private String filePath;
 
-
+    /**
+     * Creates a new Storage instance with the specified file path.
+     *
+     * @param filePath Path to the data file for storing tasks.
+     */
     public Storage(String filePath) {
         this.filePath = filePath;
     }
 
-    // read data from faye.txt and convert the text to TAsk object
-    // return an array of tasks
+    /**
+     * Reads data from the storage file and converts it to Task objects.
+     *
+     * <p>Creates the file and parent directory if they don't exist.
+     * Parses each line to reconstruct Todo, Deadline, or Event objects.</p>
+     *
+     * @return An ArrayList of tasks loaded from the file.
+     */
     public ArrayList<Task> load() { 
         ArrayList<Task> tasks = new ArrayList<>();
         try {
@@ -52,7 +69,11 @@ public class Storage {
         return tasks;
     }
 
-    //convert task object into task and save in faye.txt
+    /**
+     * Converts task objects into storage format and saves them to the file.
+     *
+     * @param tasks List of tasks to save.
+     */
     public void save(ArrayList<Task> tasks) {
         try {
             FileWriter fw = new FileWriter(filePath);
