@@ -131,6 +131,13 @@ public class Faye {
     }
 
     /**
+     * Generates a response for the user's chat message.
+     */
+    public String getResponse(String input) {
+        return "Hal heard: " + input;
+    }
+
+    /**
      * Entry point for the application.
      *
      * @param args Command-line arguments (not used).
