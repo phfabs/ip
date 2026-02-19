@@ -3,6 +3,7 @@ package faye;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -87,12 +88,20 @@ public class Storage {
         assert tasks != null : "Task list to save must not be null";
         try {
             FileWriter fw = new FileWriter(filePath);
-            for (Task t : tasks) {
-                fw.write(t.toStorageString() + System.lineSeparator());
-            }
+            tasks.stream()
+                    .map(Task::toStorageString)
+                    .forEach(line -> writeLine(fw, line));
             fw.close();
         } catch (IOException e) {
             System.out.println("Error saving tasks: " + e.getMessage());
+        }
+    }
+
+    private void writeLine(FileWriter fw, String line) {
+        try {
+            fw.write(line + System.lineSeparator());
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
         }
     }
 }
