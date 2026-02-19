@@ -21,6 +21,7 @@ public class Faye {
     private static final String COMMAND_DEADLINE = "deadline";
     private static final String COMMAND_EVENT = "event";
     private static final String COMMAND_FIND = "find";
+    private static final String COMMAND_ALIAS = "alias";
 
     private Ui ui;
     private Storage storage;
@@ -109,6 +110,10 @@ public class Faye {
             handleFind(input);
             return false;
 
+        case COMMAND_ALIAS:
+            handleAlias(input);
+            return false;
+
         default:
             ui.showError("Unknown command.");
             return false;
@@ -171,6 +176,26 @@ public class Faye {
         String keyword = Parser.getDescription(input);
         TaskList foundTasks = new TaskList(tasks.find(keyword));
         ui.showTasks(foundTasks.getTasks());
+    }
+
+    private void handleAlias(String input) {
+        String description = Parser.getDescription(input);
+        if (description.isEmpty()) {
+            ui.showError("Usage: alias <alias> <command>");
+            return;
+        }
+        String[] parts = description.split(" ");
+        if (parts.length < 2) {
+            ui.showError("Usage: alias <alias> <command>");
+            return;
+        }
+        String alias = parts[0];
+        String targetCommand = parts[1];
+        // Resolve target to its canonical command to avoid chaining aliases
+        String canonicalCommand = AliasManager.getInstance()
+                .resolve(targetCommand);
+        AliasManager.getInstance().addAlias(alias, canonicalCommand);
+        ui.showError("Alias added: " + alias + " -> " + canonicalCommand);
     }
 
     private void saveTasks() {
