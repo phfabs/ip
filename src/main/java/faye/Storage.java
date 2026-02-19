@@ -14,6 +14,12 @@ import java.util.Scanner;
  * back to the file in a specific format.</p>
  */
 public class Storage {
+    private static final String STORAGE_DELIMITER = " \\| ";
+    private static final String TASK_TYPE_TODO = "T";
+    private static final String TASK_TYPE_DEADLINE = "D";
+    private static final String TASK_TYPE_EVENT = "E";
+    private static final String DONE_MARKER = "1";
+
     private String filePath;
 
     /**
@@ -43,23 +49,26 @@ public class Storage {
             Scanner sc = new Scanner(file);
             while (sc.hasNextLine()) {
                 String line = sc.nextLine();
-                String[] parts = line.split(" \\| ");
+                String[] parts = line.split(STORAGE_DELIMITER);
 
                 String type = parts[0];
-                boolean isDone = parts[1].equals("1");
+                boolean isDone = parts[1].equals(DONE_MARKER);
                 String description = parts[2];
 
                 switch (type) {
-                    case "T":
-                        tasks.add(new Todo(description, isDone));
-                        break;
-                    case "D":
-                        LocalDateTime by = LocalDateTime.parse(parts[3]);
-                        tasks.add(new Deadline(description, isDone, by));
-                        break;
-                    case "E":
-                        tasks.add(new Event(description, isDone, parts[3], parts[4]));
-                        break;
+                case TASK_TYPE_TODO:
+                    tasks.add(new Todo(description, isDone));
+                    break;
+                case TASK_TYPE_DEADLINE:
+                    LocalDateTime by = LocalDateTime.parse(parts[3]);
+                    tasks.add(new Deadline(description, isDone, by));
+                    break;
+                case TASK_TYPE_EVENT:
+                    tasks.add(new Event(description, isDone, parts[3], parts[4]));
+                    break;
+                default:
+                    // Skip malformed or unknown task type lines
+                    break;
                 }
             }
             sc.close();

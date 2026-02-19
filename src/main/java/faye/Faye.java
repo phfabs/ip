@@ -10,6 +10,18 @@ import java.time.format.DateTimeFormatter;
  * components to provide a command-line task management interface.</p>
  */
 public class Faye {
+    private static final String DATA_FILE_PATH = "./data/faye.txt";
+    private static final String DEADLINE_DATE_FORMAT = "yyyy-MM-dd HHmm";
+    private static final String COMMAND_BYE = "bye";
+    private static final String COMMAND_LIST = "list";
+    private static final String COMMAND_MARK = "mark";
+    private static final String COMMAND_UNMARK = "unmark";
+    private static final String COMMAND_DELETE = "delete";
+    private static final String COMMAND_TODO = "todo";
+    private static final String COMMAND_DEADLINE = "deadline";
+    private static final String COMMAND_EVENT = "event";
+    private static final String COMMAND_FIND = "find";
+
     private Ui ui;
     private Storage storage;
     private TaskList tasks;
@@ -21,7 +33,7 @@ public class Faye {
      */
     public Faye() {
         ui = new Ui();
-        storage = new Storage("./data/faye.txt");
+        storage = new Storage(DATA_FILE_PATH);
         tasks = new TaskList(storage.load());
     }
 
@@ -40,87 +52,8 @@ public class Faye {
             String command = Parser.getCommand(input);
 
             try {
-                switch (command) {
-                    case "bye":
-                        ui.showBye();
-                        return;
-
-                    case "list":
-                        ui.showLine();
-                        ui.showTasks(tasks.getTasks());
-                        ui.showLine();
-                        break;
-
-                    case "mark": {
-                        int index = Parser.getIndex(input);
-                        tasks.mark(index);
-                        storage.save(tasks.getTasks());
-                        ui.showMark(tasks.get(index));
-                        break;
-                    }
-
-                    case "unmark": {
-                        int index = Parser.getIndex(input);
-                        tasks.unmark(index);
-                        storage.save(tasks.getTasks());
-                        ui.showUnmark(tasks.get(index));
-                        break;
-                    }
-
-                    case "delete": {
-                        int index = Parser.getIndex(input);
-                        Task removed = tasks.remove(index);
-                        storage.save(tasks.getTasks());
-                        ui.showDelete(removed, tasks.size());
-                        break;
-                    }
-
-                    case "todo": {
-                        String desc = Parser.getDescription(input);
-                        if (desc.isEmpty()) {
-                            throw new EmptyTaskInputException(
-                                    "Todo cannot be empty.");
-                        }
-                        Task t = new Todo(desc);
-                        tasks.add(t);
-                        storage.save(tasks.getTasks());
-                        ui.showAdd(t, tasks.size());
-                        break;
-                    }
-
-                    case "deadline": {
-                        String[] parts = Parser.splitDeadline(input);
-                        String desc = parts[0].trim();
-                        LocalDateTime by = LocalDateTime.parse(parts[1].trim(),
-                                DateTimeFormatter.ofPattern(
-                                        "yyyy-MM-dd HHmm"));
-                        Task t = new Deadline(desc, by);
-                        tasks.add(t);
-                        storage.save(tasks.getTasks());
-                        ui.showAdd(t, tasks.size());
-                        break;
-                    }
-
-                    case "event": {
-                        String[] parts = Parser.splitEvent(input);
-                        Task t = new Event(parts[0].trim(), parts[1].trim(),
-                                parts[2].trim());
-                        tasks.add(t);
-                        storage.save(tasks.getTasks());
-                        ui.showAdd(t, tasks.size());
-                        break;
-                    }
-
-                    case "find": {
-                        String keyword = Parser.getDescription(input);
-                        TaskList foundTasks = new TaskList(tasks.find(keyword));
-                        ui.showTasks(foundTasks.getTasks());
-                        break;
-                    }
-
-                    default:
-                        ui.showError("Unknown command.");
-                        break;
+                if (handleCommand(command, input)) {
+                    return;
                 }
             } catch (Exception e) {
                 ui.showError(e.getMessage());
@@ -131,7 +64,130 @@ public class Faye {
     }
 
     /**
+     * Handles a single command. Returns true if the application should exit.
+     *
+     * @param command The command token.
+     * @param input The full user input.
+     * @return True if the application should exit (bye command); false otherwise.
+     * @throws Exception If command execution fails (e.g. invalid input).
+     */
+    private boolean handleCommand(String command, String input) throws Exception {
+        switch (command) {
+        case COMMAND_BYE:
+            ui.showBye();
+            return true;
+
+        case COMMAND_LIST:
+            handleList();
+            return false;
+
+        case COMMAND_MARK:
+            handleMark(input);
+            return false;
+
+        case COMMAND_UNMARK:
+            handleUnmark(input);
+            return false;
+
+        case COMMAND_DELETE:
+            handleDelete(input);
+            return false;
+
+        case COMMAND_TODO:
+            handleTodo(input);
+            return false;
+
+        case COMMAND_DEADLINE:
+            handleDeadline(input);
+            return false;
+
+        case COMMAND_EVENT:
+            handleEvent(input);
+            return false;
+
+        case COMMAND_FIND:
+            handleFind(input);
+            return false;
+
+        default:
+            ui.showError("Unknown command.");
+            return false;
+        }
+    }
+
+    private void handleList() {
+        ui.showLine();
+        ui.showTasks(tasks.getTasks());
+        ui.showLine();
+    }
+
+    private void handleMark(String input) {
+        int index = Parser.getIndex(input);
+        tasks.mark(index);
+        saveTasks();
+        ui.showMark(tasks.get(index));
+    }
+
+    private void handleUnmark(String input) {
+        int index = Parser.getIndex(input);
+        tasks.unmark(index);
+        saveTasks();
+        ui.showUnmark(tasks.get(index));
+    }
+
+    private void handleDelete(String input) {
+        int index = Parser.getIndex(input);
+        Task removed = tasks.remove(index);
+        saveTasks();
+        ui.showDelete(removed, tasks.size());
+    }
+
+    private void handleTodo(String input) throws EmptyTaskInputException {
+        String description = Parser.getDescription(input);
+        if (description.isEmpty()) {
+            throw new EmptyTaskInputException("Todo cannot be empty.");
+        }
+        Task newTask = new Todo(description);
+        addTaskAndNotify(newTask);
+    }
+
+    private void handleDeadline(String input) {
+        String[] deadlineParts = Parser.splitDeadline(input);
+        String description = deadlineParts[0].trim();
+        LocalDateTime by = LocalDateTime.parse(deadlineParts[1].trim(),
+                DateTimeFormatter.ofPattern(DEADLINE_DATE_FORMAT));
+        Task newTask = new Deadline(description, by);
+        addTaskAndNotify(newTask);
+    }
+
+    private void handleEvent(String input) {
+        String[] eventParts = Parser.splitEvent(input);
+        Task newTask = new Event(eventParts[0].trim(), eventParts[1].trim(),
+                eventParts[2].trim());
+        addTaskAndNotify(newTask);
+    }
+
+    private void handleFind(String input) {
+        String keyword = Parser.getDescription(input);
+        TaskList foundTasks = new TaskList(tasks.find(keyword));
+        ui.showTasks(foundTasks.getTasks());
+    }
+
+    private void saveTasks() {
+        storage.save(tasks.getTasks());
+    }
+
+    private void addTaskAndNotify(Task task) {
+        tasks.add(task);
+        saveTasks();
+        ui.showAdd(task, tasks.size());
+    }
+
+    /**
      * Generates a response for the user's chat message.
+     *
+     * @param input The user's input message.
+     * @return The response string.
      */
     public String getResponse(String input) {
         return "Hal heard: " + input;

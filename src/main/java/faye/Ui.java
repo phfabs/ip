@@ -67,9 +67,7 @@ public class Ui {
      * @param size The new total number of tasks.
      */
     public void showAdd(Task task, int size) {
-        System.out.println(" Added:");
-        System.out.println("   " + task);
-        System.out.println(" Now you have " + size + " tasks.");
+        showTaskUpdate(" Added:", task, size);
     }
 
     /**
@@ -79,7 +77,18 @@ public class Ui {
      * @param size The new total number of tasks.
      */
     public void showDelete(Task task, int size) {
-        System.out.println(" Aight. Removed:");
+        showTaskUpdate(" Aight. Removed:", task, size);
+    }
+
+    /**
+     * Displays a task update message with the given action and remaining count.
+     *
+     * @param actionMessage The action description (e.g. " Added:" or " Aight. Removed:").
+     * @param task The task involved.
+     * @param size The new total number of tasks.
+     */
+    private void showTaskUpdate(String actionMessage, Task task, int size) {
+        System.out.println(actionMessage);
         System.out.println("   " + task);
         System.out.println(" Now you have " + size + " tasks.");
     }

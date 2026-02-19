@@ -105,7 +105,7 @@ public class TaskList {
 
         for (Task task : tasks) {
             if (task.getTask().contains(keyword)) {
-            matches.add(task);
+                matches.add(task);
             }
         }
 
