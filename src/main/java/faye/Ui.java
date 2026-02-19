@@ -2,6 +2,7 @@ package faye;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.stream.IntStream;
 
 /**
  * Handles user interface interactions for the Faye application.
@@ -55,9 +56,8 @@ public class Ui {
      * @param tasks List of tasks to display.
      */
     public void showTasks(ArrayList<Task> tasks) {
-        for (int i = 0; i < tasks.size(); i++) {
-            System.out.println((i + 1) + ". " + tasks.get(i));
-        }
+        IntStream.range(0, tasks.size())
+                .forEach(i -> System.out.println((i + 1) + ". " + tasks.get(i)));
     }
 
     /**

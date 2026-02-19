@@ -1,6 +1,7 @@
 package faye;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 /**
  * Manages a list of {@link Task} objects.
@@ -101,14 +102,8 @@ public class TaskList {
     
 
     public ArrayList<Task> find(String keyword) {
-        ArrayList<Task> matches = new ArrayList<>();
-
-        for (Task task : tasks) {
-            if (task.getTask().contains(keyword)) {
-                matches.add(task);
-            }
-        }
-
-        return matches;
+        return tasks.stream()
+                .filter(task -> task.getTask().contains(keyword))
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 }
