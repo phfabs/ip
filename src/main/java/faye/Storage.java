@@ -75,6 +75,7 @@ public class Storage {
      * @param tasks List of tasks to save.
      */
     public void save(ArrayList<Task> tasks) {
+        assert tasks != null : "Task list to save must not be null";
         try {
             FileWriter fw = new FileWriter(filePath);
             for (Task t : tasks) {

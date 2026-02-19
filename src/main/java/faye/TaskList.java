@@ -27,6 +27,7 @@ public class TaskList {
      * @param tasks Existing tasks to use as the internal list.
      */
     public TaskList(ArrayList<Task> tasks) {
+        assert tasks != null : "Backing list must not be null";
         this.tasks = tasks;
     }
 
@@ -36,6 +37,7 @@ public class TaskList {
      * @param task Task to add.
      */
     public void add(Task task) {
+        assert task != null : "Added task must not be null";
         tasks.add(task);
     }
 

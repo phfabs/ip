@@ -15,6 +15,7 @@ public class Task {
      * @param task Description of the task.
      */
     public Task(String task) {
+        assert task != null : "Task description must not be null";
         this.task = task;
         this.isDone = false;
     }
@@ -28,6 +29,7 @@ public class Task {
      * @param isDone Whether the task is completed.
      */
     public Task(String task, boolean isDone) {
+        assert task != null : "Task description must not be null";
         this.task = task;
         this.isDone = isDone;
     } 
