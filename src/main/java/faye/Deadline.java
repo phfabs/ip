@@ -17,6 +17,7 @@ public class Deadline extends Task {
      */
     public Deadline(String deadlineTask, LocalDateTime by) {
         super(deadlineTask);
+        assert by != null : "Deadline due date must not be null";
         this.by = by;
     }
 
@@ -29,18 +30,15 @@ public class Deadline extends Task {
      */
     public Deadline(String task, boolean isDone, LocalDateTime by) {
         super(task, isDone);
+        assert by != null : "Deadline due date must not be null";
         this.by = by;
     }
 
     /**
      * Returns a human-readable representation including the due date/time.
      *
-<<<<<<< HEAD
-     * @return String form prefixed with {@code [D]} and including {@code (by: ...)}.
-=======
      * @return String form prefixed with {@code [D]} and including
      *         {@code (by: ...)}.
->>>>>>> branch-A-CodingStandard
      */
     @Override
     public String toString() {
