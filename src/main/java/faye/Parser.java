@@ -7,6 +7,9 @@ package faye;
  * index, and task descriptions from a full input line.</p>
  */
 public class Parser {
+    private static final String SPACE_DELIMITER = " ";
+    private static final String DEADLINE_SPLITTER = "/by";
+    private static final String EVENT_SPLITTER = "/from|/to";
 
     /**
      * Extracts the first word of the input as the command.
@@ -15,7 +18,7 @@ public class Parser {
      * @return Command token (first word).
      */
     public static String getCommand(String input) {
-        return input.split(" ")[0];  // returns first word
+        return input.split(SPACE_DELIMITER)[0];
     }
 
     /**
@@ -24,15 +27,11 @@ public class Parser {
      * @param input Full user input line.
      * @return 0-based index of the task referenced by the command.
      * @throws NumberFormatException if the index token is not a number.
-<<<<<<< HEAD
-     * @throws ArrayIndexOutOfBoundsException if the input does not contain an index token.
-=======
      * @throws ArrayIndexOutOfBoundsException if the input does not contain
      *         an index token.
->>>>>>> branch-A-CodingStandard
      */
     public static int getIndex(String input) {
-        return Integer.parseInt(input.split(" ")[1]) - 1;
+        return Integer.parseInt(input.split(SPACE_DELIMITER)[1]) - 1;
     }
 
     /**
@@ -42,7 +41,7 @@ public class Parser {
      * @return Description text, or empty string if no description is present.
      */
     public static String getDescription(String input) {
-        int firstSpace = input.indexOf(" ");
+        int firstSpace = input.indexOf(SPACE_DELIMITER);
         if (firstSpace == -1) return "";
         return input.substring(firstSpace + 1).trim();
     }
@@ -54,7 +53,7 @@ public class Parser {
      * @return Array of parts split by {@code /by}.
      */
     public static String[] splitDeadline(String input) {
-        return getDescription(input).split("/by");
+        return getDescription(input).split(DEADLINE_SPLITTER);
     }
 
     /**
@@ -64,6 +63,6 @@ public class Parser {
      * @return Array of parts split by {@code /from} or {@code /to}.
      */
     public static String[] splitEvent(String input) {
-        return getDescription(input).split("/from|/to");
+        return getDescription(input).split(EVENT_SPLITTER);
     }
 }
