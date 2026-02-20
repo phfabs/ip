@@ -33,6 +33,10 @@ public class MainWindow extends AnchorPane {
     /** Injects the Faye instance */
     public void setFaye(Faye f) {
         faye = f;
+        String welcome = faye.getWelcomeMessage();
+        dialogContainer.getChildren().add(
+                DialogBox.getDukeDialog(welcome, dukeImage)
+        );
     }
 
     /**

@@ -12,6 +12,13 @@ import java.util.stream.IntStream;
  */
 public class Ui {
 
+    private static final String WELCOME_MESSAGE = " Hi, I'm Hal.";
+    private static final String BYE_MESSAGE = " Daisy, Daisy,\n"
+            + "Give me your answer do.\n"
+            + "I'm half crazy,\n"
+            + "All for the love of you. \n"
+            + "Goodbye.";
+
     private Scanner scanner;
 
     /**
@@ -25,14 +32,14 @@ public class Ui {
      * Displays the welcome message when the application starts.
      */
     public void showWelcome() {
-        System.out.println(" Yo Wassup my G! Yo friend Faye right here");
+        System.out.println(WELCOME_MESSAGE);
     }
 
     /**
      * Displays the goodbye message when the application exits.
      */
     public void showBye() {
-        System.out.println(" Im outta here. Peace!");
+        System.out.println(BYE_MESSAGE);
     }
 
     /**
@@ -120,5 +127,83 @@ public class Ui {
      */
     public void showError(String message) {
         System.out.println(message);
+    }
+
+    /**
+     * Returns the welcome message (for GUI use).
+     *
+     * @return The welcome message string.
+     */
+    public String getWelcomeMessage() {
+        return WELCOME_MESSAGE;
+    }
+
+    /**
+     * Returns the formatted bye message (for GUI use).
+     *
+     * @return The bye message string.
+     */
+    public String getByeMessage() {
+        return BYE_MESSAGE;
+    }
+
+    /**
+     * Returns the formatted task list as a string (for GUI use).
+     *
+     * @param tasks List of tasks to format.
+     * @return Formatted task list string.
+     */
+    public String getTasksMessage(ArrayList<Task> tasks) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < tasks.size(); i++) {
+            sb.append((i + 1)).append(". ").append(tasks.get(i));
+            if (i < tasks.size() - 1) {
+                sb.append("\n");
+            }
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Returns the add confirmation message (for GUI use).
+     *
+     * @param task The task that was added.
+     * @param size The new total number of tasks.
+     * @return Formatted add message string.
+     */
+    public String getAddMessage(Task task, int size) {
+        return " Added:\n   " + task + "\n Now you have " + size + " tasks.";
+    }
+
+    /**
+     * Returns the delete confirmation message (for GUI use).
+     *
+     * @param task The task that was deleted.
+     * @param size The new total number of tasks.
+     * @return Formatted delete message string.
+     */
+    public String getDeleteMessage(Task task, int size) {
+        return " Aight. Removed:\n   " + task + "\n Now you have " + size
+                + " tasks.";
+    }
+
+    /**
+     * Returns the mark confirmation message (for GUI use).
+     *
+     * @param task The task that was marked.
+     * @return Formatted mark message string.
+     */
+    public String getMarkMessage(Task task) {
+        return " Marked!\n   " + task;
+    }
+
+    /**
+     * Returns the unmark confirmation message (for GUI use).
+     *
+     * @param task The task that was unmarked.
+     * @return Formatted unmark message string.
+     */
+    public String getUnmarkMessage(Task task) {
+        return " OK, I've marked this task as not done yet:\n   " + task;
     }
 }
