@@ -22,7 +22,10 @@ public class Main extends Application {
             AnchorPane ap = fxmlLoader.load();
             Scene scene = new Scene(ap);
             stage.setScene(scene);
-            fxmlLoader.<MainWindow>getController().setFaye(faye);  // inject the Faye instance
+            stage.setMinWidth(320);
+            stage.setMinHeight(400);
+            stage.setResizable(true);
+            fxmlLoader.<MainWindow>getController().setFaye(faye);
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();

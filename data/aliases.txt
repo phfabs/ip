@@ -1,0 +1,10 @@
+b=bye
+t=todo
+d=delete
+e=event
+u=unmark
+f=find
+l=list
+ddl=deadline
+m=mark
+:)=todo

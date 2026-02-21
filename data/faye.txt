@@ -1,4 +1,5 @@
-T | 1 | ip
-T | 0 | beat cartmans ass
-T | 0 | agitate randy marsh
-T | 0 | tell a funny joke and say 'what a terrific audience' when it ends
+T | 1 | tell a joke
+T | 0 | finish the joke
+T | 1 | say what a terrific audience
+T | 1 | beat cartmans fat ass
+T | 0 | buy some marajuana from randy marsh
