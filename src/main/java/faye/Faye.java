@@ -21,6 +21,7 @@ public class Faye {
     private static final String COMMAND_DEADLINE = "deadline";
     private static final String COMMAND_EVENT = "event";
     private static final String COMMAND_FIND = "find";
+    private static final String COMMAND_ALIAS = "alias";
 
     private Ui ui;
     private Storage storage;
@@ -109,6 +110,10 @@ public class Faye {
             handleFind(input);
             return false;
 
+        case COMMAND_ALIAS:
+            handleAlias(input);
+            return false;
+
         default:
             ui.showError("Unknown command.");
             return false;
@@ -173,6 +178,26 @@ public class Faye {
         ui.showTasks(foundTasks.getTasks());
     }
 
+    private void handleAlias(String input) {
+        String description = Parser.getDescription(input);
+        if (description.isEmpty()) {
+            ui.showError("Usage: alias <alias> <command>");
+            return;
+        }
+        String[] parts = description.split(" ");
+        if (parts.length < 2) {
+            ui.showError("Usage: alias <alias> <command>");
+            return;
+        }
+        String alias = parts[0];
+        String targetCommand = parts[1];
+        // Resolve target to its canonical command to avoid chaining aliases
+        String canonicalCommand = AliasManager.getInstance()
+                .resolve(targetCommand);
+        AliasManager.getInstance().addAlias(alias, canonicalCommand);
+        ui.showError("Alias added: " + alias + " -> " + canonicalCommand);
+    }
+
     private void saveTasks() {
         storage.save(tasks.getTasks());
     }
@@ -184,13 +209,128 @@ public class Faye {
     }
 
     /**
+     * Returns the welcome message used by the CLI, for GUI use.
+     *
+     * @return The welcome message string.
+     */
+    public String getWelcomeMessage() {
+        return ui.getWelcomeMessage();
+    }
+
+    /**
+     * Processes a command and returns the response string for display (e.g. in GUI).
+     *
+     * <p>Uses the same logic as the CLI: parses input, updates tasks/storage,
+     * and returns the message that would have been shown to the user.</p>
+     *
+     * @param input The user's input message (full command line).
+     * @return The response string to display.
+     */
+    public String processCommand(String input) {
+        String command = Parser.getCommand(input);
+
+        try {
+            switch (command) {
+            case COMMAND_BYE:
+                return ui.getByeMessage();
+
+            case COMMAND_LIST:
+                return ui.getTasksMessage(tasks.getTasks());
+
+            case COMMAND_MARK: {
+                int index = Parser.getIndex(input);
+                tasks.mark(index);
+                saveTasks();
+                return ui.getMarkMessage(tasks.get(index));
+            }
+
+            case COMMAND_UNMARK: {
+                int index = Parser.getIndex(input);
+                tasks.unmark(index);
+                saveTasks();
+                return ui.getUnmarkMessage(tasks.get(index));
+            }
+
+            case COMMAND_DELETE: {
+                int index = Parser.getIndex(input);
+                Task removed = tasks.remove(index);
+                saveTasks();
+                return ui.getDeleteMessage(removed, tasks.size());
+            }
+
+            case COMMAND_TODO: {
+                String description = Parser.getDescription(input);
+                if (description.isEmpty()) {
+                    throw new EmptyTaskInputException("Todo cannot be empty.");
+                }
+                Task newTask = new Todo(description);
+                tasks.add(newTask);
+                saveTasks();
+                return ui.getAddMessage(newTask, tasks.size());
+            }
+
+            case COMMAND_DEADLINE: {
+                String[] deadlineParts = Parser.splitDeadline(input);
+                String description = deadlineParts[0].trim();
+                LocalDateTime by = LocalDateTime.parse(deadlineParts[1].trim(),
+                        DateTimeFormatter.ofPattern(DEADLINE_DATE_FORMAT));
+                Task newTask = new Deadline(description, by);
+                tasks.add(newTask);
+                saveTasks();
+                return ui.getAddMessage(newTask, tasks.size());
+            }
+
+            case COMMAND_EVENT: {
+                String[] eventParts = Parser.splitEvent(input);
+                Task newTask = new Event(eventParts[0].trim(), eventParts[1].trim(),
+                        eventParts[2].trim());
+                tasks.add(newTask);
+                saveTasks();
+                return ui.getAddMessage(newTask, tasks.size());
+            }
+
+            case COMMAND_FIND: {
+                String keyword = Parser.getDescription(input);
+                TaskList foundTasks = new TaskList(tasks.find(keyword));
+                return ui.getTasksMessage(foundTasks.getTasks());
+            }
+
+            case COMMAND_ALIAS: {
+                String description = Parser.getDescription(input);
+                if (description.isEmpty()) {
+                    return "Usage: alias <alias> <command>";
+                }
+                String[] parts = description.split(" ");
+                if (parts.length < 2) {
+                    return "Usage: alias <alias> <command>";
+                }
+                String alias = parts[0];
+                String targetCommand = parts[1];
+                String canonicalCommand = AliasManager.getInstance()
+                        .resolve(targetCommand);
+                AliasManager.getInstance().addAlias(alias, canonicalCommand);
+                return "Alias added: " + alias + " -> " + canonicalCommand;
+            }
+
+            default:
+                return "Unknown command.";
+            }
+        } catch (Exception e) {
+            return e.getMessage();
+        }
+    }
+
+    /**
      * Generates a response for the user's chat message.
+     *
+     * <p>Delegates to {@link #processCommand(String)} so the GUI uses the
+     * same checklist logic as the CLI.</p>
      *
      * @param input The user's input message.
      * @return The response string.
      */
     public String getResponse(String input) {
-        return "Hal heard: " + input;
+        return processCommand(input);
     }
 
     /**

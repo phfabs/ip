@@ -12,13 +12,15 @@ public class Parser {
     private static final String EVENT_SPLITTER = "/from|/to";
 
     /**
-     * Extracts the first word of the input as the command.
+     * Extracts the first word of the input as the command, applying alias
+     * resolution to support friendlier syntax.
      *
      * @param input Full user input line.
-     * @return Command token (first word).
+     * @return Canonical command token (first word after alias resolution).
      */
     public static String getCommand(String input) {
-        return input.split(SPACE_DELIMITER)[0];
+        String rawCommand = input.split(SPACE_DELIMITER)[0];
+        return AliasManager.getInstance().resolve(rawCommand);
     }
 
     /**
