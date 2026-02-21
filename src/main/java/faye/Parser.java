@@ -44,7 +44,9 @@ public class Parser {
      */
     public static String getDescription(String input) {
         int firstSpace = input.indexOf(SPACE_DELIMITER);
-        if (firstSpace == -1) return "";
+        if (firstSpace == -1) {
+            return "";
+        }
         return input.substring(firstSpace + 1).trim();
     }
 

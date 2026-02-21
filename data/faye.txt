@@ -1,5 +1,4 @@
 T | 1 | ip
-T | 0 | watch lec
-T | 0 | sing
 T | 0 | beat cartmans ass
-T | 0 | agitate randy march
+T | 0 | agitate randy marsh
+T | 0 | tell a funny joke and say 'what a terrific audience' when it ends

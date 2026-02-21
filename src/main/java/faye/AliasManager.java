@@ -16,6 +16,8 @@ import java.util.Scanner;
 public class AliasManager {
 
     private static final String ALIAS_FILE_PATH = "./data/aliases.txt";
+    private static final String ALIAS_COMMENT_PREFIX = "#";
+    private static final String ALIAS_KEY_VALUE_SEPARATOR = "=";
 
     private static final AliasManager INSTANCE = new AliasManager();
 
@@ -38,11 +40,11 @@ public class AliasManager {
     private void loadDefaultAliases() {
         // Minimal built-in aliases
         aliases.put("t", "todo");
-        aliases.put("d", "deadline");
+        aliases.put("ddl", "deadline");
         aliases.put("e", "event");
         aliases.put("m", "mark");
         aliases.put("u", "unmark");
-        aliases.put("del", "delete");
+        aliases.put("d", "delete");
         aliases.put("l", "list");
         aliases.put("f", "find");
         aliases.put("b", "bye");
@@ -62,15 +64,16 @@ public class AliasManager {
             Scanner scanner = new Scanner(file);
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine().trim();
-                if (line.isEmpty() || line.startsWith("#")) {
+                if (line.isEmpty() || line.startsWith(ALIAS_COMMENT_PREFIX)) {
                     continue;
                 }
-                int equalsIndex = line.indexOf('=');
-                if (equalsIndex <= 0 || equalsIndex == line.length() - 1) {
+                int separatorIndex = line.indexOf(ALIAS_KEY_VALUE_SEPARATOR);
+                if (separatorIndex <= 0
+                        || separatorIndex == line.length() - 1) {
                     continue;
                 }
-                String alias = line.substring(0, equalsIndex).trim();
-                String command = line.substring(equalsIndex + 1).trim();
+                String alias = line.substring(0, separatorIndex).trim();
+                String command = line.substring(separatorIndex + 1).trim();
                 if (!alias.isEmpty() && !command.isEmpty()) {
                     aliases.put(alias, command);
                 }
@@ -90,8 +93,8 @@ public class AliasManager {
             }
             FileWriter writer = new FileWriter(file);
             for (Map.Entry<String, String> entry : aliases.entrySet()) {
-                writer.write(entry.getKey() + "=" + entry.getValue()
-                        + System.lineSeparator());
+                writer.write(entry.getKey() + ALIAS_KEY_VALUE_SEPARATOR
+                        + entry.getValue() + System.lineSeparator());
             }
             writer.close();
         } catch (IOException e) {

@@ -7,6 +7,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+
 /**
  * Controller for the main GUI.
  */
@@ -30,7 +31,11 @@ public class MainWindow extends AnchorPane {
         scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
     }
 
-    /** Injects the Faye instance */
+    /**
+     * Injects the Faye instance and shows the welcome message in the dialog.
+     *
+     * @param f The Faye application instance.
+     */
     public void setFaye(Faye f) {
         faye = f;
         String welcome = faye.getWelcomeMessage();

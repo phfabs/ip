@@ -22,6 +22,10 @@ public class Faye {
     private static final String COMMAND_EVENT = "event";
     private static final String COMMAND_FIND = "find";
     private static final String COMMAND_ALIAS = "alias";
+    private static final String ALIAS_SPLIT_DELIMITER = " ";
+    private static final String MESSAGE_UNKNOWN_COMMAND = "Unknown command.";
+    private static final String MESSAGE_ALIAS_USAGE = "Usage: alias <alias> <command>";
+    private static final String MESSAGE_ALIAS_ADDED = "Alias added: ";
 
     private Ui ui;
     private Storage storage;
@@ -115,7 +119,7 @@ public class Faye {
             return false;
 
         default:
-            ui.showError("Unknown command.");
+            ui.showError(MESSAGE_UNKNOWN_COMMAND);
             return false;
         }
     }
@@ -181,21 +185,20 @@ public class Faye {
     private void handleAlias(String input) {
         String description = Parser.getDescription(input);
         if (description.isEmpty()) {
-            ui.showError("Usage: alias <alias> <command>");
+            ui.showError(MESSAGE_ALIAS_USAGE);
             return;
         }
-        String[] parts = description.split(" ");
+        String[] parts = description.split(ALIAS_SPLIT_DELIMITER);
         if (parts.length < 2) {
-            ui.showError("Usage: alias <alias> <command>");
+            ui.showError(MESSAGE_ALIAS_USAGE);
             return;
         }
         String alias = parts[0];
         String targetCommand = parts[1];
-        // Resolve target to its canonical command to avoid chaining aliases
         String canonicalCommand = AliasManager.getInstance()
                 .resolve(targetCommand);
         AliasManager.getInstance().addAlias(alias, canonicalCommand);
-        ui.showError("Alias added: " + alias + " -> " + canonicalCommand);
+        ui.showError(MESSAGE_ALIAS_ADDED + alias + " -> " + canonicalCommand);
     }
 
     private void saveTasks() {
@@ -298,22 +301,22 @@ public class Faye {
             case COMMAND_ALIAS: {
                 String description = Parser.getDescription(input);
                 if (description.isEmpty()) {
-                    return "Usage: alias <alias> <command>";
+                    return MESSAGE_ALIAS_USAGE;
                 }
-                String[] parts = description.split(" ");
+                String[] parts = description.split(ALIAS_SPLIT_DELIMITER);
                 if (parts.length < 2) {
-                    return "Usage: alias <alias> <command>";
+                    return MESSAGE_ALIAS_USAGE;
                 }
                 String alias = parts[0];
                 String targetCommand = parts[1];
                 String canonicalCommand = AliasManager.getInstance()
                         .resolve(targetCommand);
                 AliasManager.getInstance().addAlias(alias, canonicalCommand);
-                return "Alias added: " + alias + " -> " + canonicalCommand;
+                return MESSAGE_ALIAS_ADDED + alias + " -> " + canonicalCommand;
             }
 
             default:
-                return "Unknown command.";
+                return MESSAGE_UNKNOWN_COMMAND;
             }
         } catch (Exception e) {
             return e.getMessage();

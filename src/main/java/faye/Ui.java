@@ -18,6 +18,14 @@ public class Ui {
             + "I'm half crazy,\n"
             + "All for the love of you. \n"
             + "Goodbye.";
+    private static final String MESSAGE_ADDED_HEADER = " Added:";
+    private static final String MESSAGE_REMOVED_HEADER = " Aight. Removed:";
+    private static final String MESSAGE_MARKED = " Marked!";
+    private static final String MESSAGE_UNMARKED =
+            " OK, I've marked this task as not done yet:";
+    private static final String MESSAGE_TASK_INDENT = "   ";
+    private static final String MESSAGE_NOW_HAVE = " Now you have ";
+    private static final String MESSAGE_TASKS_SUFFIX = " tasks.";
 
     private Scanner scanner;
 
@@ -74,7 +82,7 @@ public class Ui {
      * @param size The new total number of tasks.
      */
     public void showAdd(Task task, int size) {
-        showTaskUpdate(" Added:", task, size);
+        showTaskUpdate(MESSAGE_ADDED_HEADER, task, size);
     }
 
     /**
@@ -84,7 +92,7 @@ public class Ui {
      * @param size The new total number of tasks.
      */
     public void showDelete(Task task, int size) {
-        showTaskUpdate(" Aight. Removed:", task, size);
+        showTaskUpdate(MESSAGE_REMOVED_HEADER, task, size);
     }
 
     /**
@@ -96,8 +104,8 @@ public class Ui {
      */
     private void showTaskUpdate(String actionMessage, Task task, int size) {
         System.out.println(actionMessage);
-        System.out.println("   " + task);
-        System.out.println(" Now you have " + size + " tasks.");
+        System.out.println(MESSAGE_TASK_INDENT + task);
+        System.out.println(MESSAGE_NOW_HAVE + size + MESSAGE_TASKS_SUFFIX);
     }
 
     /**
@@ -106,8 +114,8 @@ public class Ui {
      * @param task The task that was marked.
      */
     public void showMark(Task task) {
-        System.out.println(" Marked!");
-        System.out.println("   " + task);
+        System.out.println(MESSAGE_MARKED);
+        System.out.println(MESSAGE_TASK_INDENT + task);
     }
 
     /**
@@ -116,8 +124,8 @@ public class Ui {
      * @param task The task that was unmarked.
      */
     public void showUnmark(Task task) {
-        System.out.println(" OK, I've marked this task as not done yet:");
-        System.out.println("   " + task);
+        System.out.println(MESSAGE_UNMARKED);
+        System.out.println(MESSAGE_TASK_INDENT + task);
     }
 
     /**
@@ -172,7 +180,8 @@ public class Ui {
      * @return Formatted add message string.
      */
     public String getAddMessage(Task task, int size) {
-        return " Added:\n   " + task + "\n Now you have " + size + " tasks.";
+        return MESSAGE_ADDED_HEADER + "\n" + MESSAGE_TASK_INDENT + task + "\n"
+                + MESSAGE_NOW_HAVE + size + MESSAGE_TASKS_SUFFIX;
     }
 
     /**
@@ -183,8 +192,8 @@ public class Ui {
      * @return Formatted delete message string.
      */
     public String getDeleteMessage(Task task, int size) {
-        return " Aight. Removed:\n   " + task + "\n Now you have " + size
-                + " tasks.";
+        return MESSAGE_REMOVED_HEADER + "\n" + MESSAGE_TASK_INDENT + task
+                + "\n" + MESSAGE_NOW_HAVE + size + MESSAGE_TASKS_SUFFIX;
     }
 
     /**
@@ -194,7 +203,7 @@ public class Ui {
      * @return Formatted mark message string.
      */
     public String getMarkMessage(Task task) {
-        return " Marked!\n   " + task;
+        return MESSAGE_MARKED + "\n" + MESSAGE_TASK_INDENT + task;
     }
 
     /**
@@ -204,6 +213,6 @@ public class Ui {
      * @return Formatted unmark message string.
      */
     public String getUnmarkMessage(Task task) {
-        return " OK, I've marked this task as not done yet:\n   " + task;
+        return MESSAGE_UNMARKED + "\n" + MESSAGE_TASK_INDENT + task;
     }
 }

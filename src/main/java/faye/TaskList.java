@@ -99,8 +99,13 @@ public class TaskList {
     public void unmark(int index) {
         tasks.get(index).unmark();
     }
-    
 
+    /**
+     * Returns tasks whose description contains the given keyword.
+     *
+     * @param keyword The search keyword.
+     * @return List of matching tasks.
+     */
     public ArrayList<Task> find(String keyword) {
         return tasks.stream()
                 .filter(task -> task.getTask().contains(keyword))
