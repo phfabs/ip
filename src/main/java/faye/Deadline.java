@@ -56,5 +56,5 @@ public class Deadline extends Task {
     public String toStorageString() {
         return "D | " + (isDone() ? "1" : "0") + " | " + getTask() + " | " + by;
     }
-    
+
 }

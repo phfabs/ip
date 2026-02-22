@@ -40,7 +40,7 @@ public class Storage {
      *
      * @return An ArrayList of tasks loaded from the file.
      */
-    public ArrayList<Task> load() { 
+    public ArrayList<Task> load() {
         ArrayList<Task> tasks = new ArrayList<>();
         try {
             File file = new File(filePath);

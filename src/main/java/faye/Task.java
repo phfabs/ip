@@ -32,7 +32,7 @@ public class Task {
         assert task != null : "Task description must not be null";
         this.task = task;
         this.isDone = isDone;
-    } 
+    }
 
 
     /**
